@@ -22,12 +22,6 @@ Adafruit_NeoPixel pixels = Adafruit_NeoPixel(7, PIN, NEO_GRB + NEO_KHZ800);
 // oled screen
 SSD1306  display(0x3C, D2, D1, GEOMETRY_128_64);
 
-// NTP / calendar / clock options
-bool bottomFullDate = true;
-int clockType = 2;
-const char* ntpServer = "pool.ntp.org";
-const long  gmtOffset_sec = -18000;
-const int   daylightOffset_sec = 3600;
 
 
 WiFiManager wifiManager;

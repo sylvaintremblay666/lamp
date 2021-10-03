@@ -10,6 +10,18 @@
 
 #include "Arduino.h"
 
+enum ClockType {
+  dateAndTime_18,
+  timeCentered_24,
+  bigDigital_46,
+};
+
+bool bigDigital_bottomFullDate = true;
+ClockType clockType = bigDigital_46;
+const char* ntpServer = "pool.ntp.org";
+const long  gmtOffset_sec = -18000;
+const int   daylightOffset_sec = 3600;
+
 void updateClock(int);
 void updateTime();
 
@@ -37,7 +49,7 @@ void updateTime() {
       currentDayAndMonth = currentDayName + " " + String(currentDay) + " " + currentMonthName;
       currentDayAndMonthAndYear = currentDayName + " " + String(currentDay) + " " + currentMonthName + " " + String(currentYear);
 
-      if (bottomFullDate) {
+      if (bigDigital_bottomFullDate) {
         display.setColor(BLACK);
         display.fillRect(0, 47, 128, 18);
         display.setColor(WHITE);
@@ -63,7 +75,7 @@ void updateClock(int y) {
 
   display.setColor(BLACK);
 
-  if (clockType == 0) {
+  if (clockType == dateAndTime_18) {
     display.fillRect(0,y,128,18);
     display.setColor(WHITE);
 
@@ -75,13 +87,14 @@ void updateClock(int y) {
     display.setFont(ArialMT_Plain_16);
     display.drawString(127, y, currentTime);
 
-  } else if (clockType == 1) {
+  } else if (clockType == timeCentered_24) {
     display.fillRect(0, y, 128, 24);
     display.setColor(WHITE);
     display.setTextAlignment(TEXT_ALIGN_CENTER);
     display.setFont(ArialMT_Plain_24);
     display.drawString(64, y, currentTime);
-  } else if (clockType == 2) {
+
+  } else if (clockType == bigDigital_46) {
     display.fillRect(0, y - 2, 128, 46);
     display.setColor(WHITE);
     display.setTextAlignment(TEXT_ALIGN_CENTER);
