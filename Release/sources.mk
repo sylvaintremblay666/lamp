@@ -35,6 +35,22 @@ CPP_DEPS :=
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
+Release.old/core/core \
+Release.old/core/core/libb64 \
+Release.old/core/core/spiffs \
+Release.old/core/core/umm_malloc \
+Release.old \
+Release.old/libraries/Adafruit_NeoPixel \
+Release.old/libraries/DNSServer/src \
+Release.old/libraries/ESP8266WebServer/src/detail \
+Release.old/libraries/ESP8266WiFi/src \
+Release.old/libraries/ESP8266_and_ESP32_OLED_driver_for_SSD1306_displays/src \
+Release.old/libraries/ESP8266mDNS/src \
+Release.old/libraries/FastLED/src \
+Release.old/libraries/FastLED/src/platforms/esp/32 \
+Release.old/libraries/NTPClient \
+Release.old/libraries/WiFiManager \
+Release.old/libraries/Wire \
 core/core \
 core/core/libb64 \
 core/core/spiffs \
