@@ -24,22 +24,6 @@ RM := rm -f
 -include core/core/spiffs/subdir.mk
 -include core/core/libb64/subdir.mk
 -include core/core/subdir.mk
--include Release.old/libraries/Wire/subdir.mk
--include Release.old/libraries/WiFiManager/subdir.mk
--include Release.old/libraries/NTPClient/subdir.mk
--include Release.old/libraries/FastLED/src/platforms/esp/32/subdir.mk
--include Release.old/libraries/FastLED/src/subdir.mk
--include Release.old/libraries/ESP8266mDNS/src/subdir.mk
--include Release.old/libraries/ESP8266_and_ESP32_OLED_driver_for_SSD1306_displays/src/subdir.mk
--include Release.old/libraries/ESP8266WiFi/src/subdir.mk
--include Release.old/libraries/ESP8266WebServer/src/detail/subdir.mk
--include Release.old/libraries/DNSServer/src/subdir.mk
--include Release.old/libraries/Adafruit_NeoPixel/subdir.mk
--include Release.old/core/core/umm_malloc/subdir.mk
--include Release.old/core/core/spiffs/subdir.mk
--include Release.old/core/core/libb64/subdir.mk
--include Release.old/core/core/subdir.mk
--include Release.old/subdir.mk
 -include objects.mk
 
 ifneq ($(MAKECMDGOALS),clean)
