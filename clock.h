@@ -17,13 +17,14 @@ enum ClockType {
 };
 
 bool bigDigital_bottomFullDate = true;
-ClockType clockType = bigDigital_46;
+ClockType currentClockType = bigDigital_46;
 const char* ntpServer = "pool.ntp.org";
 const long  gmtOffset_sec = -18000;
 const int   daylightOffset_sec = 3600;
 
 void updateClock(int);
 void updateTime();
+String getClockTypesJson();
 
 int lastDayUpdate = -1;
 int currentSec, currentDay, currentMonth, currentYear;
@@ -49,7 +50,7 @@ void updateTime() {
       currentDayAndMonth = currentDayName + " " + String(currentDay) + " " + currentMonthName;
       currentDayAndMonthAndYear = currentDayName + " " + String(currentDay) + " " + currentMonthName + " " + String(currentYear);
 
-      if (bigDigital_bottomFullDate) {
+      if (currentClockType == bigDigital_46 && bigDigital_bottomFullDate) {
         display.setColor(BLACK);
         display.fillRect(0, 47, 128, 18);
         display.setColor(WHITE);
@@ -75,7 +76,7 @@ void updateClock(int y) {
 
   display.setColor(BLACK);
 
-  if (clockType == dateAndTime_18) {
+  if (currentClockType == dateAndTime_18) {
     display.fillRect(0,y,128,18);
     display.setColor(WHITE);
 
@@ -87,15 +88,15 @@ void updateClock(int y) {
     display.setFont(ArialMT_Plain_16);
     display.drawString(127, y, currentTime);
 
-  } else if (clockType == timeCentered_24) {
+  } else if (currentClockType == timeCentered_24) {
     display.fillRect(0, y, 128, 24);
     display.setColor(WHITE);
     display.setTextAlignment(TEXT_ALIGN_CENTER);
     display.setFont(ArialMT_Plain_24);
     display.drawString(64, y, currentTime);
 
-  } else if (clockType == bigDigital_46) {
-    display.fillRect(0, y - 2, 128, 46);
+  } else if (currentClockType == bigDigital_46) {
+    display.fillRect(0, y - 3, 128, 46);
     display.setColor(WHITE);
     display.setTextAlignment(TEXT_ALIGN_CENTER);
     display.setFont(Roboto_46);
@@ -117,4 +118,15 @@ void updateClock(int y) {
   display.display();
 }
 
+String getClockTypesJson() {
+  String json = "{ \"clockTypes\": [";
+  json += "\"Small DateTimeSec [18px]\",";
+  json += "\"Medium TimeSec [24px]\",";
+  json += "\"Fullscreen TimeSecDate[46px]\"";
+  json += "],";
+  json += "\"selectedClock\": " + String(int(currentClockType));
+  json += "}";
+
+  return json;
+}
 #endif /* CLOCK_H_ */

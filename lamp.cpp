@@ -12,40 +12,55 @@
 #include <Wire.h>
 #include <Adafruit_NeoPixel.h>
 
-#define PIN D4
+
+
 bool ledState = false;
 
-// neopixel
-#define NUM_LEDS 7
-Adafruit_NeoPixel pixels = Adafruit_NeoPixel(7, PIN, NEO_GRB + NEO_KHZ800);
+#define PIN D4 // NeoPixels
+#define NUM_LEDS 8
+int currentBrightness = 50;
+Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUM_LEDS, PIN, NEO_GRB + NEO_KHZ800);
 
-// oled screen
-SSD1306  display(0x3C, D2, D1, GEOMETRY_128_64);
+struct LampPixels {
+  boolean on = true;
+  uint8_t r = 0, g = 0, b = 0;
+} lampPixels[NUM_LEDS];
 
-
+SSD1306  display(0x3C, D2, D1, GEOMETRY_128_64); // OLED Screen
+int clockPos = 0;
 
 WiFiManager wifiManager;
+const char *wifiAPname = "lamp";
 
-#include "httpServerConfig.h"
+String getBrightnessJson();
+String getPixelsStatusJson();
+void updatePixels();
+void fadeInPixels(int r = 0, int g = 0, int b = 0, int loopDelay = 15, int interval = 1);
+void fadeOutPixels(int r = 0, int g = 0, int b = 0, int loopDelay = 15, int interval = 1);
+
+//----------------------------------
 #include "clock.h"
+#include "httpServerConfig.h"
+
 
 //The setup function is called once at startup of the sketch
 void setup()
 {
+  // Serial console
   Serial.begin(115200);
   while (!Serial) {
     yield();
   }
   Serial.println("Hello!");
 
+  // Builtin LED
   pinMode(BUILTIN_LED, OUTPUT);
   digitalWrite(BUILTIN_LED, HIGH);
-  ledState = true;
+  ledState = false;
 
-  // Oled display
+  // OLED display
   display.init();
   display.setFont(ArialMT_Plain_10);
-  // display.invertDisplay();
   display.setTextAlignment(TEXT_ALIGN_CENTER);
   display.drawString(64, 0, "Hello Hello!");
   display.drawString(64, 12, "Connecting...");
@@ -53,13 +68,9 @@ void setup()
 
   // Connect to WiFi
   wifiManager.setConnectTimeout(60);
-  wifiManager.autoConnect("lamp");
+  wifiManager.autoConnect(wifiAPname);
   Serial.println("Connected!");
-
-  ///////////////////////
-  // NTP
-  configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
-
+  Serial.print("IP address:\t"); Serial.println(WiFi.localIP());
 
   display.clear();
   display.drawString(64, 0, "Connected!");
@@ -67,13 +78,8 @@ void setup()
   display.drawString(0, 10, "SSID: " + WiFi.SSID());
   display.drawString(0, 21, "IP: " + WiFi.localIP().toString());
 
-  /*
-  display.setFont(ArialMT_Plain_16);
-  display.drawString(0, 45, ntpClient.getFormattedTime());
-  display.display();
-  */
-
-  Serial.print("IP address:\t"); Serial.println(WiFi.localIP());
+  // NTP
+  configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
 
   // Start mDNS (to be reachable via "http://THING_NAME.local"
   if (!MDNS.begin(serverName)) {
@@ -84,22 +90,20 @@ void setup()
 
   // Neopixel
   pixels.begin();
-
-  pixels.setBrightness(32);
-  for(int i = 0; i < 7; i++) {
-    pixels.setPixelColor(0, 0, 0, 0);
+  pixels.setBrightness(currentBrightness);
+  for(int i = 0; i < NUM_LEDS; i++) {
+    pixels.setPixelColor(i, 0, 0, 0);
     pixels.show();
-    /*
-    for(int j = 0; j < 256; j++) {
-      pixels.setPixelColor(i, j, 0, 0);
-      pixels.show();
-      delay(3);
-    }
-    */
   }
+
+  // Little light show
+  fadeInPixels(0, 1, 0, 10, 2);
+  fadeOutPixels(0, 1, 0, 10, 2);
 
   // Setup REST Web Server
   configureAndStartWebServer();
+
+  Serial.println(getClockTypesJson());
 }
 
 ///////////////////////////////////////////////////////////
@@ -112,7 +116,70 @@ void loop()
 
   if(millis() % 1000 < 10) {
     // updateClock(48);
-    updateClock(0);
+    updateClock(clockPos);
   }
 }
 
+String getBrightnessJson() {
+  String json = "{ \"brightness\": " + String(currentBrightness) + " }";
+  return json;
+}
+
+String getPixelsStatusJson() {
+  String json = "{ \"pixels\":";
+  json += "[";
+
+  for (int i = 0; i < NUM_LEDS; i++) {
+    json += "{";
+    json += "\"on\":";
+    json += lampPixels[i].on ? "true" : "false";
+    json += ",";
+    json += "\"r\":" + String(lampPixels[i].r) + ",";
+    json += "\"g\":" + String(lampPixels[i].g) + ",";
+    json += "\"b\":" + String(lampPixels[i].b);
+    json += "}";
+    json += i == NUM_LEDS - 1 ? "" : ",";
+  }
+  json += "]}";
+
+  return json;
+}
+
+void updatePixels() {
+  for(int i = 0; i < NUM_LEDS; i++) {
+    if (lampPixels[i].on) {
+      pixels.setPixelColor(i, lampPixels[i].r, lampPixels[i].g, lampPixels[i].b);
+    } else {
+      pixels.setPixelColor(i, 0, 0, 0);
+    }
+  }
+  pixels.show();
+}
+
+void fadeInPixels(int r, int g, int b, int loopDelay, int interval) {
+  for (int i = 0; i < 256; i += interval) {
+    for (int j = 0; j < 8; j++) {
+      lampPixels[j].r = r * i;
+      lampPixels[j].g = g * i;
+      lampPixels[j].b = b * i;
+    }
+    updatePixels();
+    delay(loopDelay);
+  }
+}
+
+void fadeOutPixels(int r, int g, int b, int loopDelay, int interval) {
+  for (int i = 255; i >= 0; i -= interval) {
+    for (int j = 0; j < 8; j++) {
+      lampPixels[j].r = r * i;
+      lampPixels[j].g = g * i;
+      lampPixels[j].b = b * i;
+    }
+    updatePixels();
+    delay(loopDelay);
+  }
+  for (int j = 0; j < 8; j++) {
+    lampPixels[j].on = false;
+  }
+  updatePixels();
+}

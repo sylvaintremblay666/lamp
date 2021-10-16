@@ -13,9 +13,18 @@ void handleLedON();
 void handleLedOFF();
 void handleLedToggle();
 void handleLedStatus();
+
 void handleColorUpdate();
+void handleSetBrightness();
+void handleGetBrightness();
+void handleSetPixel();
+
+void handleGetPixelsStatus();
+void handleGetClockTypes();
+void handleSelectClock();
 
 void send200(String);
+void send200Json(String payload);
 
 String getWiFiInfos();
 
@@ -43,6 +52,14 @@ void configureAndStartWebServer() {
   server.on("/led/off", HTTP_GET, handleLedOFF);
   server.on("/led/toggle", HTTP_GET, handleLedToggle);
   server.on("/led/color", HTTP_GET, handleColorUpdate);
+
+  server.on("/lamp/brightness/set", HTTP_GET, handleSetBrightness);
+  server.on("/lamp/brightness", HTTP_GET, handleGetBrightness);
+  server.on("/pixels/status", HTTP_GET, handleGetPixelsStatus);
+  server.on("/pixel/set", HTTP_GET, handleSetPixel);
+
+  server.on("/clocks", HTTP_GET, handleGetClockTypes);
+  server.on("/clock/select", HTTP_GET, handleSelectClock);
 
   server.onNotFound(handleNotFound);
   server.begin(serverPort);
@@ -113,31 +130,76 @@ void handleColorUpdate() {
   Serial.printf("color: %i %i %i\n", red, green, blue);
 
   for(int i = 0; i < NUM_LEDS; i++) {
-    pixels.setPixelColor(i, red, green, blue);
+    //pixels.setPixelColor(i, red, green, blue);
+    lampPixels[i].on = true;
+    lampPixels[i].r = red;
+    lampPixels[i].g = green;
+    lampPixels[i].b = blue;
   }
-  pixels.show();
-  //if (color != "") {
-  /*
-    leds[0].setRGB(red, green, blue);
-
-    leds[1].setRGB(red, green, blue);
-    leds[2].setRGB(red, green, blue);
-    leds[3].setRGB(red, green, blue);
-*/
-    // delay(50);
-    // leds[2].setRGB(red, green, blue);
-    /*
-    leds[1].setRGB(255,0,0);
-    leds[2].setRGB(0,255,0);
-    leds[3].setRGB(0,0,255);
-    */
-    //FastLED.show();
-  //}
+  updatePixels();
+  //pixels.show();
   server.sendHeader("Access-Control-Allow-Origin", "*");
   server.send(201, "text/plain", "Modified");
-  //woohoo2();
 }
 
+void handleSetPixel() {
+  Serial.println("-> handleSetPixel");
+  //Serial.println("server.args: " + server.args());
+  //String color = server.arg("color");
+  uint8_t pixelId = server.arg("pixelId").toInt();
+  uint8_t r = server.arg("r").toInt();
+  uint8_t g = server.arg("g").toInt();
+  uint8_t b = server.arg("b").toInt();
+  Serial.println(server.arg("on"));
+  boolean on = server.arg("on") == "true";
+  Serial.printf("setPixel: %i %i %i %i\n", pixelId, r, g, b, on);
+
+  lampPixels[pixelId].on = on;
+  if (on) {
+    lampPixels[pixelId].r = r;
+    lampPixels[pixelId].g = g;
+    lampPixels[pixelId].b = b;
+  } else {
+    lampPixels[pixelId].r = 0;
+    lampPixels[pixelId].g = 0;
+    lampPixels[pixelId].b = 0;
+  }
+  updatePixels();
+
+  server.sendHeader("Access-Control-Allow-Origin", "*");
+  server.send(201, "text/plain", "Modified");
+}
+
+void handleGetPixelsStatus() {
+  send200Json(getPixelsStatusJson());
+}
+
+void handleGetClockTypes() {
+  send200Json(getClockTypesJson());
+}
+
+void handleSelectClock() {
+  Serial.println("-> handleSelectClock");
+  int clockTypeArg = server.arg("clockId").toInt();
+  currentClockType = (ClockType) clockTypeArg;
+  display.clear();
+  lastDayUpdate = 0;
+  updateClock(clockPos);
+  send200("Ok");
+}
+
+void handleSetBrightness() {
+  Serial.println("-> handleSetBrightness");
+  int newBrightnessValue = server.arg("value").toInt();
+  newBrightnessValue = newBrightnessValue > 150 ? 150 : newBrightnessValue;
+  pixels.setBrightness(newBrightnessValue);
+  pixels.show();
+  send200("Ok");
+}
+
+void handleGetBrightness() {
+  send200Json(getBrightnessJson());
+}
 void handleNotFound() {
   server.sendHeader("Access-Control-Allow-Origin", "*");
   server.send(404, "text/plain", "404: Not found");
@@ -149,6 +211,12 @@ void send200(String payload) {
   server.sendHeader("Access-Control-Allow-Origin", "*");
   server.send(200, "text/html", payload);
 }
+
+void send200Json(String payload) {
+  server.sendHeader("Access-Control-Allow-Origin", "*");
+  server.send(200, "application/json", payload);
+}
+
 String openHeadAndBody() {
     String content = "";
     content += "<!DOCTYPE html><html>";
