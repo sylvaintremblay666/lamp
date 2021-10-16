@@ -39,176 +39,176 @@ const char MAIN_page[] PROGMEM = R"=====(
 
 Vue.component('mainCompo', {
   template: `
-    <div class="d-flex justify-center" style="">
-     <v-card class="ma-2 pa-2 flex-grow-1" style="">
+    <div class="d-flex justify-center" style="background-color: #DDD;">
+     <!--v-card class="ma-2 pa-2 flex-grow-1" style=""-->
+     <div>
        <h1 class="d-flex justify-center mb-2">Hello {{ServerName}} !</h1>
-        <v-divider />
         <div class="flex-column">
 
           <!-- Lights selector -->
-          <v-row no-gutters class="mb-2 mr-2 justify-center align-center">
+          <v-card rounded class="ma-2">
+            <h2 class="text-center">Lamp Control</h1>
+            <v-row no-gutters class="mb-2 mr-2 justify-center align-center">
 
-            <v-col
-              style="max-width: 200px; min-width: 200px; border:0px solid black; border-radius: 20px;background-color: #F0F0F0; line-height: 0.5;"
-              class="my-2 pt-4 pb-3 justify-center align-center d-flex flex-column"
-            >
-
-<div>
-              <v-row no-gutters class="d-flex justify-space-between" style="height: 27px;">
-                <v-spacer />
-                <v-icon :style="getLEDStyle(0)" class="notransition" @click="ledClick(0)">circle</v-icon>
-                <span class="d-flex col-3 px-10 justify-center">LEDs</span>
-                <v-icon :style="getLEDStyle(7)" @click="ledClick(7)">circle</v-icon>
-                <v-spacer />
-              </v-row>
-
-              <v-row no-gutters class="d-flex justify-space-between" style="height: 25px;">
-                <v-spacer />
-                <v-icon :style="getLEDStyle(1)" @click="ledClick(1)">circle</v-icon>
-                <v-spacer class="col-2 px-8"/>
-                <v-icon :style="getLEDStyle(6)" @click="ledClick(6)">circle</v-icon>
-                <v-spacer />
-              </v-row>
-
-              <v-row no-gutters class="d-flex justify-space-between" style="height: 20px;">
-                <v-spacer />
-                <v-icon :style="getLEDStyle(2)" @click="ledClick(2)">circle</v-icon>
-                <v-spacer class="col-1 px-5"/>
-                <v-icon :style="getLEDStyle(5)" @click="ledClick(5)">circle</v-icon>
-                <v-spacer />
-              </v-row>
-
-              <v-row no-gutters class="d-flex justify-space-between" style="height: 15;">
-                <v-spacer />
-                <v-icon :style="getLEDStyle(3)" @click="ledClick(3)">circle</v-icon>
-                <v-icon :style="getLEDStyle(4)" @click="ledClick(4)">circle</v-icon>
-                <v-spacer />
-              </v-row>
-</div>
-
-              <div class="d-flex justify-space-around pt-4">
-                <v-btn
-                  class="mr-1"
-                  rounded
-                  x-small
-                  @click="selectAll"
-                >
-                  Select All
-                </v-btn>
-                <v-btn
-                  class="ml-1"
-                  rounded
-                  x-small
-                  @click="unselectAll"
-                >
-                  UnSelect All
-                </v-btn>
-              </div>
-            </v-col>
-
-            <div class="d-flex flex-grow-1 flex-column ml-3 mt-3 align-center" style="">
-              <v-btn
-                class="mb-1"
-                style="width: 100%;"
-                small
-                @click="selectedLedsOn"
+              <v-col
+                style="max-width: 400px; min-width: 300px; border:0px solid black; border-radius: 20px;background-color: #F0F0F0; line-height: 0.5;"
+                class="ml-3 my-2 pt-4 pb-3 justify-center align-center d-flex flex-column"
               >
-                Selected: ON
-              </v-btn>
 
-              <v-btn
-                small
-                style="width: 100%;"
-                @click="selectedLedsOff"
-              >
-                Selected: OFF
-              </v-btn>
+                <div>
+                  <v-row no-gutters class="d-flex justify-center" style="height: 30px;">
+                    <v-icon :style="getLEDStyle(0)" class="notransition" @click="ledClick(0)">circle</v-icon>
+                    <span class="d-flex justify-center" style="width: 190px; font-size: 16px;">LEDs</span>
+                    <v-icon :style="getLEDStyle(7)" @click="ledClick(7)">circle</v-icon>
+                  </v-row>
 
-              <div class="d-flex align-center justify-start mt-2" style="width: 100%;">
-                 <v-slider
-                   label="Brightness"
-                   class="d-flex justify-center"
-                   v-model="brightness"
-                   @input="setBrightness"
-                   hide-details
-                   :min="1"
-                   :max="150"
-                 >
-                 </v-slider>
+                  <v-row no-gutters class="d-flex justify-center" style="height: 25px;">
+                    <v-icon :style="getLEDStyle(1)" @click="ledClick(1)">circle</v-icon>
+                    <v-spacer class="" style="max-width:140px;"/>
+                    <v-icon :style="getLEDStyle(6)" @click="ledClick(6)">circle</v-icon>
+                  </v-row>
+
+                  <v-row no-gutters class="d-flex justify-center" style="height: 25px;">
+                    <v-icon :style="getLEDStyle(2)" @click="ledClick(2)">circle</v-icon>
+                    <v-spacer class="" style="max-width: 80px;"/>
+                    <v-icon :style="getLEDStyle(5)" @click="ledClick(5)">circle</v-icon>
+                  </v-row>
+
+                  <v-row no-gutters class="d-flex justify-center" style="height: 15;">
+                    <v-icon :style="getLEDStyle(3)" @click="ledClick(3)">circle</v-icon>
+                    <v-spacer class="" style="max-width: 15px;"/>
+                    <v-icon :style="getLEDStyle(4)" @click="ledClick(4)">circle</v-icon>
+                  </v-row>
+                </div>
+
+                <div class="d-flex justify-space-around pt-4">
+                  <v-btn
+                    class="mr-1"
+                    rounded
+                    small
+                    @click="selectAll"
+                  >
+                    Select All
+                  </v-btn>
+                  <v-btn
+                    class="ml-1"
+                    rounded
+                    small
+                    @click="unselectAll"
+                  >
+                    UnSelect All
+                  </v-btn>
+                </div>
+              </v-col>
+
+              <div class="d-flex flex-grow-1 flex-column ml-3 mt-3 align-center" style="">
+                <v-btn
+                  class="mb-1"
+                  style="width: 100%;"
+                  small
+                  rounded
+                  @click="selectedLedsOn"
+                >
+                  Selected: ON
+                </v-btn>
+
+                <v-btn
+                  small
+                  rounded
+                  style="width: 100%;"
+                  @click="selectedLedsOff"
+                >
+                  Selected: OFF
+                </v-btn>
+
+                <div class="d-flex align-center justify-start mt-2" style="width: 100%;">
+                   <v-slider
+                     label="Brightness"
+                     class="d-flex justify-center"
+                     v-model="brightness"
+                     @input="setBrightness"
+                     hide-details
+                     :min="1"
+                     :max="150"
+                   >
+                   </v-slider>
+                </div>
+
+                <div class="mt-2">
+                  <v-color-picker 
+                    width="340"
+                    v-model="color" 
+                    hide-mode-switch
+                    hide-inputs
+                    dot-size="20"
+                    canvas-height="100"
+                    @input="colorChange"
+                  />
+                </div>
               </div>
-
-              <div class="mt-2">
-                <v-color-picker 
-                  width="200"
-                  v-model="color" 
-                  hide-mode-switch
-                  hide-inputs
-                  dot-size="20"
-                  canvas-height="100"
-                  @input="colorChange"
-                />
-              </div>
-            </div>
-          </v-row>
-
-          <v-divider />
+            </v-row>
+          </v-card>
 
           <!-- Clocks radio group -->
-          <v-row no-gutters class="mb-2 mr-2">
-            <v-radio-group 
-              v-model="selectedClock.name"
-              @change="newClockSelected"
-            >
-              <v-radio
-                v-for="clockType, key in clockTypes"
-                :key="clockType"
-                :label="clockType"
-                :value="clockType"
-              ></v-radio>
-            </v-radio-group>
-
-            <!-- Calendar Examples -->
-            <div 
-              class="d-flex flex-grow-1 justify-center align-center"
-            >
-              <div 
-                class="d-flex"
-                style="width: 128px; height:64px; background-color: black;" 
+          <v-card rounded class="ma-2 pa-2">
+            <h2 class="text-center">Clock and Calendar</h1>
+            <v-row no-gutters class="mb-2 mr-2">
+              <v-radio-group 
+                v-model="selectedClock.name"
+                @change="newClockSelected"
               >
+                <v-radio
+                  v-for="clockType, key in clockTypes"
+                  :key="clockType"
+                  :label="clockType"
+                  :value="clockType"
+                ></v-radio>
+              </v-radio-group>
 
-                <!-- Medium clock -->
-                <v-row no-gutters 
-                  v-if="selectedClock.id === 1"
-                  class="justify-center" 
+              <!-- Calendar Examples -->
+              <div 
+                class="d-flex flex-grow-1 justify-center align-center"
+              >
+                <div 
+                  class="d-flex"
+                  style="width: 128px; height:64px; background-color: black;" 
                 >
-                  <v-col style="font-size: 21px; font-family: Arial;" class="mt-n1">
-                    <div style="color:#4CB3FA;" class="d-flex justify-center">
-                      {{ timeStringSecs }}
-                    </div>
-                  </v-col>
-                </v-row>
 
-                <!-- Big clock -->
-                <v-row no-gutters 
-                  v-if="selectedClock.id === 2"
-                  class="justify-center" 
-                  style="line-height: 12px;"
-                >
-                  <v-col style="font-size: 40px; font-family: Roboto;" class="mt-4">
-                    <div style="color:#4CB3FA;" class="d-flex justify-center">
-                      {{ timeString }}
-                    </div>
-                    <span style="font-size: 14px; color: yellow;" class="d-flex mt-4 justify-center">
-                      Mar 12 Sept 2021
-                    </span>
-                  </v-col>
-                </v-row>
+                  <!-- Medium clock -->
+                  <v-row no-gutters 
+                    v-if="selectedClock.id === 1"
+                    class="justify-center" 
+                  >
+                    <v-col style="font-size: 21px; font-family: Arial;" class="mt-n1">
+                      <div style="color:#4CB3FA;" class="d-flex justify-center">
+                        {{ timeStringSecs }}
+                      </div>
+                    </v-col>
+                  </v-row>
 
+                  <!-- Big clock -->
+                  <v-row no-gutters 
+                    v-if="selectedClock.id === 2"
+                    class="justify-center" 
+                    style="line-height: 12px;"
+                  >
+                    <v-col style="font-size: 40px; font-family: Roboto;" class="mt-4">
+                      <div style="color:#4CB3FA;" class="d-flex justify-center">
+                        {{ timeString }}
+                      </div>
+                      <span style="font-size: 14px; color: yellow;" class="d-flex mt-4 justify-center">
+                        Mar 12 Sept 2021
+                      </span>
+                    </v-col>
+                  </v-row>
+
+                </div>
               </div>
-            </div>
-          </v-row>
+            </v-row>
+          </v-card>
         </div>
-     </v-card>
+     <!--/v-card-->
+       </div>
     </div>
   `,
 
@@ -347,6 +347,7 @@ Vue.component('mainCompo', {
           this.setPixel(idx);
         };
       });
+      this.getPixelsStatus();
     },
 
     async getClockTypes() {
