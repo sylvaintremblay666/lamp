@@ -53,11 +53,6 @@ void setup()
   }
   Serial.println("Hello!");
 
-  // Builtin LED
-  pinMode(BUILTIN_LED, OUTPUT);
-  digitalWrite(BUILTIN_LED, HIGH);
-  ledState = false;
-
   // OLED display
   display.init();
   display.setFont(ArialMT_Plain_10);
@@ -104,6 +99,10 @@ void setup()
   configureAndStartWebServer();
 
   Serial.println(getClockTypesJson());
+
+  // Builtin LED
+  digitalWrite(BUILTIN_LED, HIGH);
+  ledState = false;
 }
 
 ///////////////////////////////////////////////////////////
