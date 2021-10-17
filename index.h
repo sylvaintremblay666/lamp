@@ -42,13 +42,15 @@ Vue.component('mainCompo', {
     <div class="d-flex justify-center" style="background-color: #DDD;">
      <!--v-card class="ma-2 pa-2 flex-grow-1" style=""-->
      <div>
-       <h1 class="d-flex justify-center mb-2">Hello {{ServerName}} !</h1>
+       <v-card rounded class="ma-2">
+         <h1 class="d-flex justify-center mb-2">Hello {{ServerName}} !</h1>
+       </v-card>
         <div class="flex-column">
 
           <!-- Lights selector -->
           <v-card rounded class="ma-2">
-            <h2 class="text-center">Lamp Control</h1>
-            <v-row no-gutters class="mb-2 mr-2 justify-center align-center">
+            <h2 class="text-center">Lamp Control</h2>
+            <v-row no-gutters class="mb-2 mr-3 justify-center align-center">
 
               <v-col
                 style="max-width: 400px; min-width: 300px; border:0px solid black; border-radius: 20px;background-color: #F0F0F0; line-height: 0.5;"
@@ -103,9 +105,9 @@ Vue.component('mainCompo', {
 
               <div class="d-flex flex-grow-1 flex-column ml-3 mt-3 align-center" style="">
                 <v-btn
-                  class="mb-1"
+                  class="mb-2"
                   style="width: 100%;"
-                  small
+                  medium
                   rounded
                   @click="selectedLedsOn"
                 >
@@ -113,7 +115,8 @@ Vue.component('mainCompo', {
                 </v-btn>
 
                 <v-btn
-                  small
+                  class="my-2"
+                  medium
                   rounded
                   style="width: 100%;"
                   @click="selectedLedsOff"
@@ -121,7 +124,7 @@ Vue.component('mainCompo', {
                   Selected: OFF
                 </v-btn>
 
-                <div class="d-flex align-center justify-start mt-2" style="width: 100%;">
+                <div class="d-flex align-center justify-start my-4" style="width: 100%;">
                    <v-slider
                      label="Brightness"
                      class="d-flex justify-center"
@@ -151,7 +154,7 @@ Vue.component('mainCompo', {
 
           <!-- Clocks radio group -->
           <v-card rounded class="ma-2 pa-2">
-            <h2 class="text-center">Clock and Calendar</h1>
+            <h2 class="text-center">Clock and Calendar</h2>
             <v-row no-gutters class="mb-2 mr-2">
               <v-radio-group 
                 v-model="selectedClock.name"
