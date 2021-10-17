@@ -42,6 +42,11 @@
 			<locationURI>ECLIPSE_HOME/arduinoPlugin/packages/esp8266/hardware/esp8266/3.0.2/variants/d1_mini</locationURI>
 		</link>
 		<link>
+			<name>libraries/APDS-9960_Gesture_Sensor_esp8266_Library-V_1.4.2</name>
+			<type>2</type>
+			<location>/home/stremblay/Arduino/libraries/APDS-9960_Gesture_Sensor_esp8266_Library-V_1.4.2</location>
+		</link>
+		<link>
 			<name>libraries/Adafruit_NeoPixel</name>
 			<type>2</type>
 			<locationURI>ECLIPSE_HOME/arduinoPlugin/libraries/Adafruit_NeoPixel/1.8.7</locationURI>
@@ -70,11 +75,6 @@
 			<name>libraries/ESP8266mDNS</name>
 			<type>2</type>
 			<locationURI>ECLIPSE_HOME/arduinoPlugin/packages/esp8266/hardware/esp8266/3.0.2/libraries/ESP8266mDNS</locationURI>
-		</link>
-		<link>
-			<name>libraries/FastLED</name>
-			<type>2</type>
-			<locationURI>ECLIPSE_HOME/arduinoPlugin/libraries/FastLED/3.4.0</locationURI>
 		</link>
 		<link>
 			<name>libraries/NTPClient</name>

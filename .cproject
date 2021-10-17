@@ -26,11 +26,11 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lamp/libraries/ESP8266WiFi/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lamp/libraries/DNSServer/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lamp/libraries/ESP8266mDNS/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lamp/libraries/FastLED/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lamp/libraries/Wire}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lamp/libraries/ESP8266_and_ESP32_OLED_driver_for_SSD1306_displays/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lamp/libraries/Adafruit_NeoPixel}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lamp/libraries/NTPClient}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lamp/libraries/APDS-9960_Gesture_Sensor_esp8266_Library-V_1.4.2/src}&quot;"/>
 								</option>
 								<inputType id="io.sloeber.compiler.cpp.sketch.input.1397236610" name="CPP source files" superClass="io.sloeber.compiler.cpp.sketch.input"/>
 							</tool>
@@ -43,11 +43,11 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lamp/libraries/ESP8266WiFi/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lamp/libraries/DNSServer/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lamp/libraries/ESP8266mDNS/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lamp/libraries/FastLED/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lamp/libraries/Wire}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lamp/libraries/ESP8266_and_ESP32_OLED_driver_for_SSD1306_displays/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lamp/libraries/Adafruit_NeoPixel}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lamp/libraries/NTPClient}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lamp/libraries/APDS-9960_Gesture_Sensor_esp8266_Library-V_1.4.2/src}&quot;"/>
 								</option>
 								<inputType id="io.sloeber.compiler.c.sketch.input.1461450205" name="C Source Files" superClass="io.sloeber.compiler.c.sketch.input"/>
 							</tool>
@@ -60,11 +60,11 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lamp/libraries/ESP8266WiFi/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lamp/libraries/DNSServer/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lamp/libraries/ESP8266mDNS/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lamp/libraries/FastLED/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lamp/libraries/Wire}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lamp/libraries/ESP8266_and_ESP32_OLED_driver_for_SSD1306_displays/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lamp/libraries/Adafruit_NeoPixel}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lamp/libraries/NTPClient}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lamp/libraries/APDS-9960_Gesture_Sensor_esp8266_Library-V_1.4.2/src}&quot;"/>
 								</option>
 								<inputType id="io.sloeber.compiler.S.sketch.input.969388986" name="Assembly source files" superClass="io.sloeber.compiler.S.sketch.input"/>
 							</tool>
