@@ -14,15 +14,28 @@
 #include <Adafruit_NeoPixel.h>
 
 
+// Rotary encoder
+#define CLK D6
+#define DT D7
+#define SW D5
+
+int counter = 0;
+int currentStateCLK;
+int lastStateCLK;
+String currentDir ="";
+unsigned long lastButtonPress = 0;
+
 // Gesture sensor
 #define APDS9960_SDA    D2
 #define APDS9960_SCL    D1
-const byte APDS9960_INT  = D6;
+// const byte APDS9960_INT  = D6;
 SparkFun_APDS9960 apds = SparkFun_APDS9960();
 volatile bool isr_flag = 0;
 void ICACHE_RAM_ATTR interruptRoutine ();
 void handleGesture();
 
+// reset button
+int prevButtonVal = 0;
 
 bool ledState = false;
 uint16_t lastSecUpdate = 0;
@@ -111,27 +124,28 @@ void setup()
 
   Serial.println(getClockTypesJson());
 
-  // Builtin LED
-  digitalWrite(BUILTIN_LED, HIGH);
-  ledState = false;
+  // Rotary encoder
+  pinMode(CLK,INPUT);
+  pinMode(DT,INPUT);
+  pinMode(SW, INPUT_PULLUP);
+
+  // Read the initial state of CLK
+  lastStateCLK = digitalRead(CLK);
 
   // Gesture sensor
   //Start I2C with pins defined above
   Wire.begin(APDS9960_SDA,APDS9960_SCL);
 
   // Set interrupt pin as input
-  pinMode(APDS9960_INT, INPUT);
+  // pinMode(APDS9960_INT, INPUT);
   // pinMode(digitalPinToInterrupt(APDS9960_INT), INPUT);
 
   // Initialize Serial port
   Serial.begin(115200);
-  Serial.println();
-  Serial.println(F("--------------------------------"));
-  Serial.println(F("SparkFun APDS-9960 - GestureTest"));
-  Serial.println(F("--------------------------------"));
+  // Serial.println(F("--------------------------------"));
 
   // Initialize interrupt service routine
-  attachInterrupt(digitalPinToInterrupt(APDS9960_INT), interruptRoutine, FALLING);
+  // attachInterrupt(digitalPinToInterrupt(APDS9960_INT), interruptRoutine, FALLING);
 
   // Initialize APDS-9960 (configure I2C and initial values)
   if ( apds.init() ) {
@@ -146,6 +160,17 @@ void setup()
   } else {
    Serial.println(F("Something went wrong during gesture sensor init!"));
   }
+
+  // Initialize interrupt service routine
+  // attachInterrupt(digitalPinToInterrupt(APDS9960_INT), interruptRoutine, FALLING);
+
+  // reset button
+  pinMode(D0, INPUT_PULLDOWN_16);
+  prevButtonVal = digitalRead(D0);
+
+  // Builtin LED
+  digitalWrite(BUILTIN_LED, HIGH);
+  ledState = false;
 }
 
 ///////////////////////////////////////////////////////////
@@ -162,18 +187,71 @@ void loop()
     updateClock(clockPos);
   }
 
+  int buttonVal = digitalRead(D0);
+  if (prevButtonVal != buttonVal) {
+    Serial.println("Button val changed!");
+    Serial.println(buttonVal);
+    prevButtonVal = buttonVal;
+  }
+
+  // Read the current state of CLK
+  currentStateCLK = digitalRead(CLK);
+
+  // If last and current state of CLK are different, then pulse occurred
+  // React to only 1 state change to avoid double count
+  if (currentStateCLK != lastStateCLK  && currentStateCLK == 1){
+
+      // If the DT state is different than the CLK state then
+      // the encoder is rotating CCW so decrement
+      if (digitalRead(DT) != currentStateCLK) {
+          counter --;
+          currentDir ="CCW";
+      } else {
+          // Encoder is rotating CW so increment
+          counter ++;
+          currentDir ="CW";
+      }
+
+      Serial.print("Direction: ");
+      Serial.print(currentDir);
+      Serial.print(" | Counter: ");
+      Serial.println(counter);
+  }
+
+  // Remember last CLK state
+  lastStateCLK = currentStateCLK;
+
+  // Read the button state
+  int btnState = digitalRead(SW);
+
+
+  //If we detect LOW signal, button is pressed
+  if (btnState == LOW) {
+      //if 50ms have passed since last LOW pulse, it means that the
+      //button has been pressed, released and pressed again
+      if (millis() - lastButtonPress > 50) {
+          Serial.println("Button pressed!");
+      }
+
+      // Remember last button press event
+      lastButtonPress = millis();
+  }
+
+
   /*
   if(millis() % 1000 < 10) {
     // updateClock(48);
     updateClock(clockPos);
   }*/
 
+  /*
   if( isr_flag == 1 ) {
     detachInterrupt(digitalPinToInterrupt(APDS9960_INT));
     handleGesture();
     isr_flag = 0;
     attachInterrupt(digitalPinToInterrupt(APDS9960_INT), interruptRoutine, FALLING);
   }
+  */
 }
 
 String getBrightnessJson() {
@@ -241,17 +319,15 @@ void fadeOutPixels(int r, int g, int b, int loopDelay, int interval) {
 }
 
 void interruptRoutine() {
-  Serial.println("Interrupt!");
+  // Serial.println("Interrupt!");
   isr_flag = 1;
 }
 
 void handleGesture() {
     Serial.println("handleGesture!");
     if ( apds.isGestureAvailable() ) {
-      Serial.println("gestureAvailable!");
-      int gg = apds.readGesture();
-      Serial.println(String(gg));
-    switch ( gg ) {
+      Serial.println("available!");
+    switch ( apds.readGesture() ) {
       case DIR_UP:
         Serial.println("UP");
         break;
@@ -273,5 +349,8 @@ void handleGesture() {
       default:
         Serial.println("NONE");
     }
+  } else {
+    Serial.println('NotAvail');
   }
+  Serial.println("handleGesture end");
 }

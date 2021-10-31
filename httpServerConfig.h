@@ -18,11 +18,13 @@ void handleColorUpdate();
 void handleSetBrightness();
 void handleGetBrightness();
 void handleSetPixel();
+void handleSetPixels();
 
 void handleGetPixelsStatus();
 void handleGetClockTypes();
 void handleSelectClock();
 
+void handleOptions();
 void send200(String);
 void send200Json(String payload);
 
@@ -57,6 +59,8 @@ void configureAndStartWebServer() {
   server.on("/lamp/brightness", HTTP_GET, handleGetBrightness);
   server.on("/pixels/status", HTTP_GET, handleGetPixelsStatus);
   server.on("/pixel/set", HTTP_GET, handleSetPixel);
+  server.on("/pixels/set", HTTP_POST, handleSetPixels);
+  server.on("/pixels/set", HTTP_OPTIONS, handleOptions);
 
   server.on("/clocks", HTTP_GET, handleGetClockTypes);
   server.on("/clock/select", HTTP_GET, handleSelectClock);
@@ -170,6 +174,19 @@ void handleSetPixel() {
   server.send(201, "text/plain", "Modified");
 }
 
+void handleSetPixels() {
+  Serial.println("-> handleSetPixels");
+
+  String ledsJson = server.arg("plain");
+  Serial.println("leds: ");
+  Serial.println(ledsJson);
+
+  server.sendHeader("Access-Control-Allow-Origin", "*");
+  server.sendHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS");
+  server.sendHeader("Access-Control-Allow-Headers", "Origin, Content-Type, X-Auth-Token");
+  server.send(200, "text/plain", "Ok");
+}
+
 void handleGetPixelsStatus() {
   send200Json(getPixelsStatusJson());
 }
@@ -191,7 +208,7 @@ void handleSelectClock() {
 void handleSetBrightness() {
   Serial.println("-> handleSetBrightness");
   int newBrightnessValue = server.arg("value").toInt();
-  newBrightnessValue = newBrightnessValue > 150 ? 150 : newBrightnessValue;
+  newBrightnessValue = newBrightnessValue > 200 ? 200 : newBrightnessValue;
   pixels.setBrightness(newBrightnessValue);
   pixels.show();
   send200("Ok");
@@ -206,6 +223,14 @@ void handleNotFound() {
 }
 
 //////////////////////////////
+
+void handleOptions(){
+  Serial.println("HandleOptions !!");
+  server.sendHeader("Access-Control-Allow-Origin", "*");
+  server.sendHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS");
+  server.sendHeader("Access-Control-Allow-Headers", "Origin, Content-Type, X-Auth-Token");
+  server.send(200, "text/plain", "Ok");
+}
 
 void send200(String payload) {
   server.sendHeader("Access-Control-Allow-Origin", "*");
